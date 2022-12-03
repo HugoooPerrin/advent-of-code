@@ -1,5 +1,5 @@
 """
-Advent of code - Day 1
+Advent of code - Day 2
 """
 
 

@@ -2,7 +2,7 @@
 Advent of code - Day 1
 
 key points:
-    * np.partition vs np.sort
+* np.partition vs np.sort
 """
 
 import re
