@@ -7,6 +7,7 @@ Key points:
 
 
 import re
+import copy
 import numpy as np 
 import pandas as pd
 
@@ -19,10 +20,7 @@ with open('./data/day5.txt', 'r') as file:
     raw = file.read()
 
 # Processing data
-instruction_start = re.search('move', raw).start()
-
-raw_stacks = raw[:instruction_start-2]
-raw_instructions = raw[instruction_start:]
+raw_stacks, raw_instructions = raw.split('\n\n')
 
 # Processing stacks
 cranes = [c for c in raw_stacks.split('\n')[:-1]]
@@ -31,9 +29,7 @@ n_stacks = np.max([int(i) for i in re.findall('\d+', raw_stacks.split('\n')[-1])
 stacks1 = {
     i: list(reversed([e for e in map(lambda s: s[1+4*(i-1)], cranes) if e != ' '])) for i in range(1, n_stacks+1)
 }
-stacks2 = {
-    i: list(reversed([e for e in map(lambda s: s[1+4*(i-1)], cranes) if e != ' '])) for i in range(1, n_stacks+1)
-}
+stacks2 = copy.deepcopy(stacks1)
 
 # Processing instructions
 move_format = 'move (\d+) from (\d+) to (\d+)'
