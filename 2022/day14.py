@@ -1,5 +1,8 @@
 """
 Advent of code - Day 14
+
+Key points:
+* again recursivity
 """
 
 
