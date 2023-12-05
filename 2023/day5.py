@@ -21,16 +21,6 @@ data = raw.split('\n\n')
 # Parsing
 seeds = [int(i) for i in re.findall(r'\d+', data[0])]
 
-# Nice but not efficient : memory error
-# def map_to_map(raw_map): 
-#     map = list(range(max_))
-#     ranges_ = [[int(j) for j in re.findall(r'\d+', elem)] for elem in raw_map.split('\n')[1:]]
-#     for r in ranges_:
-#         map[r[1]:r[1]+r[2]] = list(range(r[0], r[0]+r[2]))
-#     return map
-# 
-# maps = [map_to_map(d) for d in data[1:]]
-
 maps = [[[int(j) for j in re.findall(r'\d+', elem)] 
                     for elem in d.split('\n')[1:]] 
                         for d in data[1:]]
@@ -52,13 +42,36 @@ print(np.min(locations))
 
 #=============================== Second part ===============================
 
-seed_starts, seed_ranges_ = seeds[::2], seeds[1::2]
+def recursive_apply_map(seed, map):
+    # Stop condition
+    if len(map) == 0:
+        return [seed]
+    # variables
+    start, range_ = seed
+    dest, source, len_ = map[0]
+    transition = dest - source
+    # inner overlap
+    if (start >= source) & (start+range_ <= source+len_):
+        return [(start+transition, range_)]
+    # no overlap
+    elif (start >= source+len_) | (start+range_ < source):
+        return rec_apply_map(seed, map[1:])
+    # lower overlap
+    elif (start < source) & (start+range_ <= source+len_):
+        return [(source+transition, start+range_-source)] + rec_apply_map((start, source-start), map[1:])
+    # upper overlap
+    elif (start >= source) & (start+range_ > source+len_):
+        return [(start+transition, source+len_-start)] + rec_apply_map((source+len_, start+range_-(source+len_)), map[1:])
+    # complete overlap
+    else:
+        return [(source+transition, len_)] + rec_apply_map((start, source-start), map[1:]) + rec_apply_map((source+len_, start+range_-(source+len_)), map[1:])
 
-lower_loc = np.inf
+seeds = [(s,r) for s,r in zip(seeds[::2], seeds[1::2])]
+for map in maps:
+    next_seeds = []
+    for seed in seeds:
+        next_seeds.extend(recursive_apply_map(seed, map))
+    seeds = next_seeds
 
-# Seems right but never ends... 
-for start, r in zip(seed_starts, seed_ranges_):
-    for s in range(start, start+r):
-        lower_loc = min(lower_loc, apply_map(s, maps))
-
-print(lower_loc)
+locations = [seed[0] for seed in seeds]
+print(np.min(locations))
