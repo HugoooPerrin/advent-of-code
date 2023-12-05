@@ -31,7 +31,7 @@ print(np.sum(points))
 
 #=============================== Part two ===============================
 
-scratchcards = np.array([1]*len(matches))
+scratchcards = np.ones(len(matches)).astype(int)
 
 for i in range(len(matches)):
     scratchcards[(i+1):(i+matches[i]+1)] += scratchcards[i]
