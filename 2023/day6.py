@@ -1,5 +1,13 @@
 """
 Advent of code - Day 6
+
+Here we have to solve:
+    -x² + tx - d > 0
+
+with t = race time
+     d = best distance
+
+where x = retaining time 
 """
 
 import re
@@ -27,7 +35,7 @@ def solve(t, d):
 
 n_solutions = [solve(t, d) for t, d in zip(times, distances)]
 
-print(np.prod(n_solutions))
+print(np.prod([solve(t, d) for t, d in zip(times, distances)]))
 
 #=============================== First part ===============================
 
