@@ -7,7 +7,7 @@ Here we have to solve:
 with t = race time
      d = best distance
 
-where x = retaining time 
+and x = retaining time 
 """
 
 import re
@@ -28,7 +28,8 @@ distances = [int(i) for i in re.findall(r'\d+', raw.split('\n')[1])]
 
 def solve(t, d):
     delta = t**2 - 4*d
-    x_min, x_max = (t-np.sqrt(delta))/2 + 1e-10, (t+np.sqrt(delta))/2 - 1e-10
+    x_min = (t-np.sqrt(delta))/2 + 1e-10
+    x_max = (t+np.sqrt(delta))/2 - 1e-10
     return int(np.floor(x_max) - np.ceil(x_min) + 1)
 
 #=============================== First part ===============================
